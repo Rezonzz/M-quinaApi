@@ -85,17 +85,23 @@ namespace MaquinaApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Route("/Coins/PostCoinsBox")]
         [HttpPost]
-        public async Task<ActionResult<CoinsBox>> PostCoinsBox(CoinsBox coinsBox)
+        public async Task<ActionResult<List<CoinsBox>>> PostCoinsBox(List<CoinsBox> coinsBoxList)
         {
-          if (_context.CoinsBox == null)
-          {
-              return Problem("Entity set 'CoinsBoxContext.CoinsBox'  is null.");
-          }
-            _context.CoinsBox.Add(coinsBox);
+            if (_context.CoinsBox == null)
+            {
+                return Problem("Entity set 'CoinsBoxContext.CoinsBox' is null.");
+            }
+
+            foreach (var coinsBox in coinsBoxList)
+            {
+                _context.CoinsBox.Add(coinsBox);
+            }
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCoinsBox", new { id = coinsBox.Id }, coinsBox);
+            return CreatedAtAction("GetCoinsBox", coinsBoxList);
         }
+
 
         // DELETE: api/CoinsBoxes/5
         [HttpDelete("{id}")]

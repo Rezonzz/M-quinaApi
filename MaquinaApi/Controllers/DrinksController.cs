@@ -85,16 +85,21 @@ namespace MaquinaApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Route("/Drinks/PostDrinks")]
         [HttpPost]
-        public async Task<ActionResult<Drinks>> PostDrinks(Drinks drinks)
+        public async Task<ActionResult<List<Drinks>>> PostDrinks(List<Drinks> drinksList)
         {
-          if (_context.Drinks == null)
-          {
-              return Problem("Entity set 'DrinksContext.Drinks'  is null.");
-          }
-            _context.Drinks.Add(drinks);
+            if (_context.Drinks == null)
+            {
+                return Problem("Entity set 'DrinksContext.Drinks' is null.");
+            }
+
+            foreach (var drinks in drinksList)
+            {
+                _context.Drinks.Add(drinks);
+            }
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetDrinks", new { id = drinks.Id }, drinks);
+            return CreatedAtAction("GetDrinks", drinksList);
         }
 
         // DELETE: api/Drinks/5
