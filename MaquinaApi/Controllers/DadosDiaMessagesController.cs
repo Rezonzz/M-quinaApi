@@ -85,17 +85,23 @@ namespace MaquinaApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Route("/DadosDiaMessages/PostDadosDiaMessages")]
         [HttpPost]
-        public async Task<ActionResult<DadosDiaMessages>> PostDadosDiaMessages(DadosDiaMessages dadosDiaMessages)
+        public async Task<ActionResult<List<DadosDiaMessages>>> PostDadosDiaMessages(List<DadosDiaMessages> dadosDiaMessagesList)
         {
-          if (_context.DadosDiaMessages == null)
-          {
-              return Problem("Entity set 'DadosDiaMessagesContext.DadosDiaMessages'  is null.");
-          }
-            _context.DadosDiaMessages.Add(dadosDiaMessages);
+            if (_context.DadosDiaMessages == null)
+            {
+                return Problem("Entity set 'DadosDiaMessagesContext.DadosDiaMessages' is null.");
+            }
+
+            foreach (var dadosDiaMessages in dadosDiaMessagesList)
+            {
+                _context.DadosDiaMessages.Add(dadosDiaMessages);
+            }
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetDadosDiaMessages", new { id = dadosDiaMessages.Id }, dadosDiaMessages);
+            return CreatedAtAction("GetDadosDiaMessages", dadosDiaMessagesList);
         }
+
 
         // DELETE: api/DadosDiaMessages/5
         [HttpDelete("{id}")]
