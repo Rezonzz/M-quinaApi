@@ -102,6 +102,28 @@ namespace MaquinaApi.Controllers
             return CreatedAtAction("GetDadosDiaMessages", dadosDiaMessagesList);
         }
 
+        [HttpPost("/DadosDiaMessages/PostDadosDiaMessages/{id}")]
+        public async Task<ActionResult<DadosDiaMessages>> PostDadosDiaMessages(int id, List<DadosDiaMessages> dadosDiaMessagesList)
+        {
+            // Verificar se todos os objetos na lista têm o mesmo ID
+            if (dadosDiaMessagesList.Any(d => d.Id != id))
+            {
+                return BadRequest();
+            }
+
+            // Verificar se algum dos objetos com o ID especificado já existe
+            bool exists = await _context.DadosDiaMessages.AnyAsync(d => d.Id == id);
+
+            if (exists)
+            {
+                return Conflict(); // Retorna um status de conflito se algum objeto já existe
+            }
+
+            _context.DadosDiaMessages.AddRange(dadosDiaMessagesList);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetDadosDiaMessages", new { id = id }, dadosDiaMessagesList);
+        }
 
         // DELETE: api/DadosDiaMessages/5
         [HttpDelete("{id}")]
