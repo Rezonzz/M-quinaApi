@@ -52,8 +52,8 @@ namespace MaquinaApi.Controllers
 
         // PUT: api/CoinsBoxes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCoinsBox(long id, CoinsBox coinsBox)
+        [HttpPost("/Coins/PostCoinsBox/{id}")]
+        public async Task<IActionResult> PostCoinsBox(long id, [FromBody] CoinsBox coinsBox)
         {
             if (id != coinsBox.Id)
             {

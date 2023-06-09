@@ -52,8 +52,8 @@ namespace MaquinaApi.Controllers
 
         // PUT: api/Drinks/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutDrinks(long id, Drinks drinks)
+        [HttpPost("/Drinks/PostDrinks/{id}")]
+        public async Task<IActionResult> PostDrinks(long id, [FromBody] Drinks drinks)
         {
             if (id != drinks.Id)
             {
@@ -80,6 +80,7 @@ namespace MaquinaApi.Controllers
 
             return NoContent();
         }
+
 
         // POST: api/Drinks
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

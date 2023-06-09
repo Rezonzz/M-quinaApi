@@ -52,8 +52,8 @@ namespace MaquinaApi.Controllers
 
         // PUT: api/DadosAnoMessages/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutDadosAnoMessages(long id, DadosAnoMessages dadosAnoMessages)
+        [HttpPost("/DadosAnoMessages/PostDadosAnoMessages/{id}")]
+        public async Task<IActionResult> PostDadosAnoMessages(long id, [FromBody] DadosAnoMessages dadosAnoMessages)
         {
             if (id != dadosAnoMessages.Id)
             {
@@ -100,29 +100,6 @@ namespace MaquinaApi.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetDadosAnoMessages", dadosAnoMessagesList);
-        }
-
-        [HttpPost("/DadosAnoMessages/PostDadosAnoMessages/{id}")]
-        public async Task<ActionResult<DadosAnoMessages>> PostDadosAnoMessages(int id, List<DadosAnoMessages> dadosAnoMessagesList)
-        {
-            // Verificar se todos os objetos na lista têm o mesmo ID
-            if (dadosAnoMessagesList.Any(d => d.Id != id))
-            {
-                return BadRequest();
-            }
-
-            // Verificar se algum dos objetos com o ID especificado já existe
-            bool exists = await _context.DadosAnoMessages.AnyAsync(d => d.Id == id);
-
-            if (exists)
-            {
-                return Conflict(); // Retorna um status de conflito se algum objeto já existe
-            }
-
-            _context.DadosAnoMessages.AddRange(dadosAnoMessagesList);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetDadosAnoMessages", new { id = id }, dadosAnoMessagesList);
         }
 
         // DELETE: api/DadosAnoMessages/5
